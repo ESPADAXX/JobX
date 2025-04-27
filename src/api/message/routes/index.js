@@ -1,11 +1,8 @@
-const router = require("express").Router();
-const isAuthenticated = require("../../../middleware/isAuthenticate");
-const { sendMessage, getMessages } = require("../controller");
+const express = require("express");
+const router = express.Router();
+const messageController = require("../controller/index");
 
-// SEND MESSAGE
-router.post("/", isAuthenticated, sendMessage);
-
-// GET MESSAGES BETWEEN TWO USERS
-router.get("/:userId1/:userId2", isAuthenticated, getMessages);
+// Define routes and ensure handlers are functions
+router.post("/send", messageController.sendMessage); // Ensure sendMessage is a function
 
 module.exports = router;
