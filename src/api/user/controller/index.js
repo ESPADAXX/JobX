@@ -50,6 +50,25 @@ exports.create = async (req, res) => {
   }
 };
 
+// GET ALL Users
+exports.readAll = async (req, res) => {
+  try {
+    const users = await User.find(); // Fetch all users from the database
+    res.status(200).json({
+      status: 200,
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      success: false,
+      message: "Internal Server Error",
+      error: error.message || "Something went wrong",
+    });
+  }
+};
+
 // GET ONE User BY ID
 exports.readOne = async (req, res) => {
   try {
