@@ -33,7 +33,7 @@ exports.create = async (req, res) => {
       }
     }
 
-    const savedUser = await newUser.save();
+    const savedUser = await newUser.save(); // Save the new user using Mongoose
     res.status(201).json({
       status: 201,
       success: true,
@@ -50,29 +50,10 @@ exports.create = async (req, res) => {
   }
 };
 
-// GET ALL Users
-exports.readAll = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json({
-      status: 200,
-      success: true,
-      data: users,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 500,
-      success: false,
-      message: "Internal Server Error",
-      error: error.message || "Something went wrong",
-    });
-  }
-};
-
 // GET ONE User BY ID
 exports.readOne = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id); // Replaced readOne with findById
     if (!user) {
       return res.status(404).json({
         status: 404,

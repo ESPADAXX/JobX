@@ -22,8 +22,8 @@ exports.register = async (req, res) => {
     //   });
     // }
     try {
-        const existingUser = await readOne(User, { email });
-        if (existingUser.success) {
+        const existingUser = await User.findOne({ email }); // Replaced readOne with Mongoose's findOne
+        if (existingUser) {
             return res.status(409).send({
                 success: false,
                 message: "User already exists.",
@@ -31,12 +31,13 @@ exports.register = async (req, res) => {
         } else {
             const verificationCode = generateVerificationCode();
             const hashedPassword = await bcrypt.hash(password, 10);
-            await create(User, {
+            const newUser = new User({
                 fullName,
                 email,
                 password: hashedPassword,
                 verificationCode,
             });
+            await newUser.save(); // Save the new user using Mongoose
 
             const successMessage =
                 "User registered successfully. Verification email sent.";
@@ -72,14 +73,14 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     let { email, password } = req.body;
     try {
-        const user = await readOne(User, { email });
-        if (!user.data) {
+        const user = await User.findOne({ email }); // Replaced readOne with Mongoose's findOne
+        if (!user) {
             return res
                 .status(401)
                 .send({ success: false, message: "Invalid email or password" });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.data.password);
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
             return res
@@ -87,9 +88,9 @@ exports.login = async (req, res) => {
                 .send({ success: false, message: "Invalid email or password" });
         }
 
-        const { accessToken, refreshToken } = generateTokens(user.data);
-        user.data.refreshToken = refreshToken;
-        await user.data.save();
+        const { accessToken, refreshToken } = generateTokens(user);
+        user.refreshToken = refreshToken;
+        await user.save(); // Save the updated user using Mongoose
 
         // Set the refresh token as an HTTP-only cookie
         res.cookie("refreshToken", refreshToken, {
@@ -102,8 +103,8 @@ exports.login = async (req, res) => {
         return res.status(201).send({
             success: true,
             accessToken,
-            id: user.data._id,
-            profileCreation: user.data.profileCreation,
+            id: user._id,
+            profileCreation: user.profileCreation,
             message: "Login successful. Welcome back!",
         });
     } catch (error) {
