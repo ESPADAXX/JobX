@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const User = require('../models/User');
-const { readOne } = require('./crudPattern');
 require("dotenv").config();
 
 const isAuthenticated = async (req, res, next) => {
@@ -35,7 +34,14 @@ const isAuthenticated = async (req, res, next) => {
           const response = await axios.get(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`);
           decoded = response.data;
           // console.log("decoded", decoded);
-          decoded.id = (await readOne(User,{ googleId: decoded.sub })).data._id;
+          const user = await User.findOne({ googleId: decoded.sub });
+          if (!user) {
+            return res.status(404).json({
+              success: false,
+              message: "User not found."
+            });
+          }
+          decoded.id = user._id;
         } catch (googleError) {
           // console.error("google error :", googleError.response);
 

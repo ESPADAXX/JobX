@@ -1,5 +1,5 @@
 // models/Job.ts
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const jobSchema = new mongoose.Schema({
   clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -17,4 +17,4 @@ const jobSchema = new mongoose.Schema({
 
 jobSchema.index({ location: '2dsphere' });
 
-export default mongoose.model('Job', jobSchema);
+module.exports = mongoose.model('Job', jobSchema);

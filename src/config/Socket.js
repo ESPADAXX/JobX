@@ -1,10 +1,11 @@
+const socketIO = require("socket.io"); // Ensure socket.io is required
 const Message = require("../models/Message");
 const User = require("../models/User");
 
 let ioInstance;
 
 module.exports = (server) => {
-  const io = require("socket.io")(server, {
+  const io = socketIO(server, {
     cors: {
       origin: "*",
       methods: ["GET", "POST"],

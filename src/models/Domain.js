@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const domainSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -6,4 +6,4 @@ const domainSchema = new mongoose.Schema({
   description: { type: String }
 }, { timestamps: true });
 
-export default mongoose.model('Domain', domainSchema);
+module.exports = mongoose.model('Domain', domainSchema);
