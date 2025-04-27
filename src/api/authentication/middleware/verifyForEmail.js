@@ -1,5 +1,5 @@
 const User = require('../../../models/User');
-const generateTokens = require('../../../middlewares/generateTokens');
+const generateTokens = require('../../../middleware/generateTokens');
 
 exports.verifyForEmail = async (req, res) => {
     const { code } = req.body;
