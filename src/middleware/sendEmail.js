@@ -14,7 +14,7 @@ exports.sendEmail = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "houssam@nhs.ma",
+        user: "daoudi.houssam.03@gmail.com",
         pass: process.env.PASSWORD_EMAIL_APP
       },
     });
@@ -32,7 +32,7 @@ exports.sendEmail = async (req, res) => {
         if (error) {
           reject({
             success: false,
-            message: "Error sending verification email"
+            message: "Error sending verification email" + error
           });
         } else {
           resolve({

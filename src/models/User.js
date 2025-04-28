@@ -22,6 +22,13 @@ const userSchema = new mongoose.Schema({
   refreshToken: { type: String }, // Refresh token for session management
   role: { type: String, enum: ['client', 'worker'], required: true },
   createdAt: { type: Date, default: Date.now },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verificationCode: {
+    type: String,
+  },
   profile: profileSchema
 });
 
