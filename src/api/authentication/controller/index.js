@@ -14,7 +14,7 @@ const generateVerificationCode = () => {
 };
 
 exports.register = async (req, res) => {
-    const { email, fullName, password, confirmPassword } = req.body;
+    const { email, fullName, password, confirmPassword, role } = req.body;
     // if (password !== confirmPassword) {
     //   return res.status(400).json({
     //     success: false,
@@ -34,7 +34,8 @@ exports.register = async (req, res) => {
             const newUser = new User({
                 fullName,
                 email,
-                password: hashedPassword,
+                passwordHash: hashedPassword,
+                role: role || 'client', // Default to 'client' if no role is provided
                 verificationCode,
             });
             await newUser.save(); // Save the new user using Mongoose
@@ -80,7 +81,7 @@ exports.login = async (req, res) => {
                 .send({ success: false, message: "Invalid email or password" });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, user.passwordHash);
 
         if (!passwordMatch) {
             return res
