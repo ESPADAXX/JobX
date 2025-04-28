@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
             const newUser = new User({
                 fullName,
                 email,
-                passwordHash: hashedPassword,
+                password: hashedPassword,
                 role: role || 'client', // Default to 'client' if no role is provided
                 verificationCode,
             });
