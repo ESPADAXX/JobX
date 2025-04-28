@@ -4,10 +4,10 @@ const { create, update, readAll, readOne, remove} = require("../controller");
 const upload = require("../../../middleware/multer");
 
 // GET ALL USERS
-router.get("/", isAuthenticated, readAll);
+router.get("/", readAll);
 
 // CREATE NEW USER
-router.post("/", isAuthenticated, create);
+router.post("/", create);
 
 // GET ONE USER
 router.get("/:id", isAuthenticated, readOne);

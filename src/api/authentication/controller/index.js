@@ -80,15 +80,17 @@ exports.login = async (req, res) => {
                 .status(401)
                 .send({ success: false, message: "Invalid email or password" });
         }
-
-        const passwordMatch = await bcrypt.compare(password, user.passwordHash);
+        
+        const passwordMatch = password && user.password ?
+        await bcrypt.compare(password, user.password) :
+        false;
 
         if (!passwordMatch) {
             return res
                 .status(401)
                 .send({ success: false, message: "Invalid email or password" });
-        }
-
+            }
+            
         const { accessToken, refreshToken } = generateTokens(user);
         user.refreshToken = refreshToken;
         await user.save(); // Save the updated user using Mongoose
@@ -96,11 +98,10 @@ exports.login = async (req, res) => {
         // Set the refresh token as an HTTP-only cookie
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
-
         return res.status(201).send({
             success: true,
             accessToken,
