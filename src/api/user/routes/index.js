@@ -13,7 +13,7 @@ router.post("/", create);
 router.get("/:id", readOne); // Ensure readOne is a valid function
 
 // UPDATE USER
-router.put("/:id", upload.single('profilePicture'), update);
+router.put("/:id", update);
 
 // DELETE USER
 router.delete("/:id", remove);

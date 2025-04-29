@@ -1,6 +1,7 @@
 const User = require("../../../models/User"); // Adjust the path if necessary
 const { v4: uuidv4 } = require("uuid");
 const uploadToGoogleDrive = require("../../../middleware/uploadFileToDrive");
+const bcrypt = require("bcryptjs");
 
 // CREATE NEW User
 exports.create = async (req, res) => {
@@ -98,42 +99,21 @@ exports.readOne = async (req, res) => {
 // UPDATE User
 exports.update = async (req, res) => {
   try {
+    const { fullName, password } = req.body;
     const updateData = {};
-    const { job, bio } = req.body;
 
-    if (job && bio) updateData.profile = { job, bio };
-
-    // Handle file uploads if applicable
-    if (req.file) {
-      const uniqueId = uuidv4(); // Generate a unique ID
-      const { path: filePath, originalname } = req.file;
-      const fileExtension = originalname.split(".").pop(); // Get file extension
-      const uniqueFileName = `${uniqueId}.${fileExtension}`;
-      // Upload file to Google Drive (or other storage service)
-      const uploadResult = await uploadToGoogleDrive(
-        filePath,
-        uniqueFileName,
-        process.env.PROFILE_FOLDER_ID
-      );
-      if (uploadResult.success) {
-        if (!updateData.profile) {
-          updateData.profile = {};
-        }
-        updateData.profile.profilePicture = uploadResult.fileId; // Store the file ID in the profile
-      } else {
-        return res.status(500).json({
-          status: 500,
-          success: false,
-          message: "Failed to upload profile picture",
-          error: uploadResult.error,
-        });
-      }
+    // Only update fields that are provided
+    if (fullName) updateData.fullName = fullName;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
     }
-    updateData.profileCreation = true;
 
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({

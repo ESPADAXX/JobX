@@ -1,19 +1,6 @@
 // models/User.ts
 const mongoose = require('mongoose');
 
-const profileSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  bio: String,
-  phone: String,
-  profilePicture: String,
-  location: {
-    type: { type: String, enum: ['Point'], default: 'Point' },
-    coordinates: { type: [Number], default: [0, 0] }
-  },
-});
-
-profileSchema.index({ location: '2dsphere' });
-
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true }, // Password for authentication
