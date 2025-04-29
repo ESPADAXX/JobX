@@ -29,7 +29,10 @@ const userSchema = new mongoose.Schema({
   verificationCode: {
     type: String,
   },
-  profile: profileSchema
+  fullName: {
+    type: String,
+    required: true,
+  }
 });
 
 module.exports = mongoose.model('User', userSchema);

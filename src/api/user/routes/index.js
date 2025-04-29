@@ -4,18 +4,18 @@ const { create, update, readAll, readOne, remove } = require("../controller");
 const upload = require("../../../middleware/multer");
 
 // GET ALL USERS
-router.get("/", isAuthenticated, readAll);
+router.get("/", readAll);
 
 // CREATE NEW USER
-router.post("/", isAuthenticated, create);
+router.post("/", create);
 
 // GET ONE USER
-router.get("/:id", isAuthenticated, readOne); // Ensure readOne is a valid function
+router.get("/:id", readOne); // Ensure readOne is a valid function
 
 // UPDATE USER
-router.put("/:id", isAuthenticated, upload.single('profilePicture'), update);
+router.put("/:id", upload.single('profilePicture'), update);
 
 // DELETE USER
-router.delete("/:id", isAuthenticated, remove);
+router.delete("/:id", remove);
 
 module.exports = router;

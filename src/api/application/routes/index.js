@@ -10,13 +10,13 @@ router.get("/", readAll);
 router.post("/", create);
 
 // GET ONE USER
-router.get("/:id", isAuthenticated, readOne);
+router.get("/:id", readOne);
 
 // UPDATE USER
-router.put("/:id", isAuthenticated, update);
+router.put("/:id", update);
 
 // DELETE USER
-router.delete("/:id", isAuthenticated, remove);
+router.delete("/:id", remove);
 
 
 
